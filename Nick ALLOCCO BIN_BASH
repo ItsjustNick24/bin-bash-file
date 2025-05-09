@@ -1,0 +1,55 @@
+#!/bin/bash#!/bin/bash
+
+# Script: system_info.sh
+# Description: Collects general system information on Ubuntu Server
+
+echo "===== System Information Report ====="
+echo "Generated on: $(date)"
+echo
+
+#System Hostname
+echo ">> Hostname:"
+hostname
+echo
+
+# Operating System
+echo ">> Operating System:"
+lsb_release -d 2>/dev/null || grep PRETTY_NAME /etc/os-release
+echo
+
+# System Uptime
+echo ">> System Uptime:"
+uptime -p
+echo
+
+# Linux Kernel Version
+echo ">> Linux Kernel Version:"
+uname -r
+echo
+
+# General CPU Information
+echo ">> CPU Information:"
+lscpu | grep -E '^Architecture|^Model name|^CPU\(s\)|^Thread|^Core|^Socket' | uniq
+echo
+
+# Memory Usage
+echo ">> Memory (Available / Free):"
+free -h
+echo
+
+# IP and MAC Information for All Interfaces
+echo ">> Network Interfaces (IP & MAC):"
+ip -brief address show
+echo
+
+# Filesystem Usage and Types
+echo ">> Filesystem Usage and Types:"
+df -hT
+echo
+
+#Last 5 log entries containing "error" (case-insensitive)
+echo ">> Last 5 log entries containing 'error':"
+grep -i error /var/log/syslog 2>/dev/null | tail -n 5 || echo "No entries found or /var/log/syslog not available"
+echo
+
+echo "===== End of Report ====="
